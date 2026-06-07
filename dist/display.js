@@ -84,6 +84,8 @@ export function printHelp() {
         chalk.dim('→ scan a custom port range'));
     console.log(`  ${chalk.cyan('pd')} ${chalk.white('kill')} ${chalk.yellow('8080')}          ` +
         chalk.dim('→ kill the process on port 8080'));
+    console.log(`  ${chalk.cyan('pd')} ${chalk.white('db')}                   ` +
+        chalk.dim('→ show status of all known database ports'));
     console.log();
 }
 export function printCheckResult(port, entry) {
@@ -112,6 +114,38 @@ export function printKillError(entry, err) {
     console.log(`  ${chalk.red('✗')} Could not kill ${chalk.yellow(entry.process)} ` +
         chalk.dim(`(pid ${entry.pid})`) +
         `: ${chalk.red(msg)}`);
+    console.log();
+}
+export function printDbResult(result) {
+    const running = result.entries.filter((e) => e.running).length;
+    divider();
+    console.log();
+    console.log(`  ${chalk.cyan('◆')} ${chalk.bold('DATABASES')}  ` +
+        (running === 0
+            ? chalk.dim('none running')
+            : chalk.dim(`${running} of ${result.entries.length} ports active`)));
+    console.log();
+    console.log('  ' +
+        cell('SERVICE', 18, chalk.dim) +
+        cell('PORT', 8, chalk.dim) +
+        cell('STATUS', 14, chalk.dim) +
+        chalk.dim('PROCESS'));
+    console.log('  ' + chalk.dim('─'.repeat(W() - 6)));
+    for (const e of result.entries) {
+        const status = e.running
+            ? chalk.green('● running')
+            : chalk.dim('○ stopped');
+        const proc = e.running
+            ? chalk.yellow(e.process ?? '—') + chalk.dim(` pid ${e.pid}`)
+            : chalk.dim('—');
+        console.log('  ' +
+            cell(e.name, 18) +
+            cell(String(e.port), 8, chalk.bold) +
+            cell(status, 23) +
+            proc);
+    }
+    console.log();
+    console.log('  ' + chalk.dim(`Scanned in ${result.scanMs}ms`));
     console.log();
 }
 export function printNextResult(from, ports) {

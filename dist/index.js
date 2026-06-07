@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { scan, scanCustomRange, checkPort, findNextFree, } from './scanner.js';
-import { printHeader, printBusySection, printFreeSection, printHelp, printCheckResult, printNextResult, printKillSuccess, printKillError, } from './display.js';
+import { scan, scanCustomRange, checkPort, findNextFree, scanDatabases, } from './scanner.js';
+import { printHeader, printBusySection, printFreeSection, printHelp, printCheckResult, printNextResult, printKillSuccess, printKillError, printDbResult, } from './display.js';
 import { createInterface } from 'readline';
 import chalk from 'chalk';
 async function confirm(prompt) {
@@ -112,5 +112,12 @@ program
     catch (err) {
         printKillError(entry, err);
     }
+});
+program
+    .command('db')
+    .description('Show status of known database ports (PostgreSQL, MySQL, Redis, MongoDB, …)')
+    .action(() => {
+    const result = scanDatabases();
+    printDbResult(result);
 });
 program.parse();

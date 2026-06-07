@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import type { PortEntry, PortRange, RangeSummary, ScanResult } from './types.js';
+import type { PortEntry, PortRange, RangeSummary, ScanResult, DbEntry, DbScanResult } from './types.js';
 
 export const DEFAULT_RANGES: PortRange[] = [
   { name: '3000–3999', start: 3000, end: 3999, description: 'React / Next.js' },
@@ -110,4 +110,39 @@ export function findNextFree(fromPort: number, count = 5): number[] {
     if (!allBusy.has(p)) free.push(p);
   }
   return free;
+}
+
+export const KNOWN_DATABASES: { name: string; ports: number[] }[] = [
+  { name: 'PostgreSQL',      ports: [5432, 5433] },
+  { name: 'MySQL/MariaDB',   ports: [3306, 3307] },
+  { name: 'MongoDB',         ports: [27017, 27018] },
+  { name: 'Redis',           ports: [6379, 6380] },
+  { name: 'Elasticsearch',   ports: [9200, 9300] },
+  { name: 'CouchDB',         ports: [5984] },
+  { name: 'Neo4j',           ports: [7474, 7687] },
+  { name: 'Cassandra',       ports: [9042] },
+  { name: 'Memcached',       ports: [11211] },
+  { name: 'Kafka',           ports: [9092] },
+  { name: 'Zookeeper',       ports: [2181] },
+  { name: 'ClickHouse',      ports: [8123, 9000] },
+];
+
+export function scanDatabases(): DbScanResult {
+  const t0 = Date.now();
+  const allBusy = getAllListeningPorts();
+
+  const entries: DbEntry[] = KNOWN_DATABASES.flatMap(({ name, ports }) =>
+    ports.map((port) => {
+      const entry = allBusy.get(port);
+      return {
+        name,
+        port,
+        running: !!entry,
+        process: entry?.process,
+        pid: entry?.pid,
+      };
+    }),
+  );
+
+  return { entries, scanMs: Date.now() - t0 };
 }

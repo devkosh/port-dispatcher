@@ -6,6 +6,7 @@ import {
   scanCustomRange,
   checkPort,
   findNextFree,
+  scanDatabases,
   DEFAULT_RANGES,
 } from './scanner.js';
 import {
@@ -17,6 +18,7 @@ import {
   printNextResult,
   printKillSuccess,
   printKillError,
+  printDbResult,
 } from './display.js';
 import { createInterface } from 'readline';
 import chalk from 'chalk';
@@ -146,6 +148,14 @@ program
     } catch (err) {
       printKillError(entry, err);
     }
+  });
+
+program
+  .command('db')
+  .description('Show status of known database ports (PostgreSQL, MySQL, Redis, MongoDB, …)')
+  .action(() => {
+    const result = scanDatabases();
+    printDbResult(result);
   });
 
 program.parse();

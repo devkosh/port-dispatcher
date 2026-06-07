@@ -21,3 +21,14 @@ export interface ScanResult {
     ranges: RangeSummary[];
     scanMs: number;
 }
+export interface DbEntry {
+    name: string;
+    port: number;
+    running: boolean;
+    process?: string;
+    pid?: number;
+}
+export interface DbScanResult {
+    entries: DbEntry[];
+    scanMs: number;
+}

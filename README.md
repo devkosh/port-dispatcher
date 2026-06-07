@@ -62,6 +62,9 @@ pd --version
 # Overview of all default port ranges
 pd
 
+# Show status of all known database ports
+pd db
+
 # Scan a specific range
 pd scan 5000-6000
 
@@ -90,6 +93,23 @@ pd kill 8080 --force
 | 4000–4999 | General dev |
 | 8000–8999 | HTTP alt / LLMs |
 | 11000–11999 | Ollama range |
+
+## Database port coverage (`pd db`)
+
+| Service | Ports checked |
+|---------|--------------|
+| PostgreSQL | 5432, 5433 |
+| MySQL / MariaDB | 3306, 3307 |
+| MongoDB | 27017, 27018 |
+| Redis | 6379, 6380 |
+| Elasticsearch | 9200, 9300 |
+| CouchDB | 5984 |
+| Neo4j | 7474, 7687 |
+| Cassandra | 9042 |
+| Memcached | 11211 |
+| Kafka | 9092 |
+| Zookeeper | 2181 |
+| ClickHouse | 8123, 9000 |
 
 ## Development
 

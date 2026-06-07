@@ -31,4 +31,6 @@ Data flows in one direction: `scanner.ts` produces data, `display.ts` renders it
 
 **`KNOWN_PORTS`** in `scanner.ts` is the label map used in display — adding a service label means adding an entry there.
 
+**`KNOWN_DATABASES`** in `scanner.ts` is the list of database services checked by `pd db`. Each entry has a `name` and a `ports` array (e.g. PostgreSQL → [5432, 5433]). `scanDatabases()` walks every port in this list against the `lsof` snapshot and returns a `DbScanResult` with running/stopped status for each port.
+
 The project uses `"module": "node16"` in tsconfig, so all local imports must use `.js` extensions (even for `.ts` source files).
