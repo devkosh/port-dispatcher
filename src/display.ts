@@ -30,9 +30,7 @@ export function printHeader(scanMs: number, rangeCount: number): void {
 }
 
 export function printBusySection(result: ScanResult): void {
-  const entries: PortEntry[] = [];
-  for (const rs of result.ranges) entries.push(...rs.busyPorts);
-  entries.sort((a, b) => a.port - b.port);
+  const entries: PortEntry[] = Array.from(result.allBusy.values()).sort((a, b) => a.port - b.port);
 
   const count = entries.length;
 

@@ -22,10 +22,7 @@ export function printHeader(scanMs, rangeCount) {
     console.log('  ' + chalk.dim(`  Scanned ${rangeCount} ranges in ${scanMs}ms`));
 }
 export function printBusySection(result) {
-    const entries = [];
-    for (const rs of result.ranges)
-        entries.push(...rs.busyPorts);
-    entries.sort((a, b) => a.port - b.port);
+    const entries = Array.from(result.allBusy.values()).sort((a, b) => a.port - b.port);
     const count = entries.length;
     divider();
     console.log();
